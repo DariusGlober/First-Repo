@@ -6,14 +6,17 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using APIGenerator.DTOs;
-using APIGenerator.Data;
 using AutoMapper;
 using APIGenerator.Models;
+using Microsoft.AspNetCore.Authorization;
+using APIGenerator.ActionFilters;
 
 namespace APIGenerator.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
+    [ExceptionFilter]
     public class MemesController : ControllerBase
     {
         private readonly MyDBContext _context;

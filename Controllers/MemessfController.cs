@@ -1,4 +1,5 @@
 ﻿using APIGenerator.DTOs;
+using APIGenerator.Services;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -42,9 +43,9 @@ namespace APIGenerator.Controllers
 
             //byte[] imagebk = ImageTextMerge(image1, "TEST", 5, 5, 15, 15, 200, 200);
 
-            GeneratorController cont = new GeneratorController();
+            Generator cont = new Generator();
             //cont.PostDownloadimageFile();
-            return cont.PostDownloadimageFile();
+            return cont.DownloadimageFile();
 
             string fileName = "new.jpg";
             //byte[] file = File.ReadAllBytes(Server.MapPath("~/Files/" + fileName));

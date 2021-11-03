@@ -7,10 +7,10 @@ using System.Collections.Generic;
 
 namespace APIGenerator.Models
 {
-    public partial class MemesImages
+    public partial class Usuarios
     {
         public int Id { get; set; }
-        public string ImageName { get; set; }
-        public string Image { get; set; }
+        public string UserName { get; set; }
+        public string Pwd { get; set; }
     }
 }

@@ -6,14 +6,20 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using APIGenerator.DTOs;
-using APIGenerator.Data;
 using AutoMapper;
 using APIGenerator.Models;
+using Microsoft.AspNetCore.Authorization;
+using APIGenerator.ActionFilters;
+using APIGenerator.Services;
+using System.Net.Http;
+using System.IO;
 
 namespace APIGenerator.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
+    [ExceptionFilter]
     public class MemesController : ControllerBase
     {
         private readonly MyDBContext _context;
@@ -35,17 +41,20 @@ namespace APIGenerator.Controllers
 
         // GET: api/Memes/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<ImageDTO>> GetImageDTO(int id)
+        public async Task<ActionResult<byte[]>> GetImageDTO(int id)
         {
             var imageDTO = await _context.MemesImages.FindAsync(id);
             var ImageDTO = new ImageDTO();
+
+            Generator generator = new Generator();
+            HttpResponseMessage file = generator.DownloadimageFile(ImageDTO);
 
             if (imageDTO == null)
             {
                 return NotFound();
             }
 
-            return ImageDTO;
+            return Ok(file.Content);
         }
 
         // PUT: api/Memes/5
@@ -86,13 +95,17 @@ namespace APIGenerator.Controllers
         [HttpPost]
         public async Task<ActionResult<ImageDTO>> PostImageDTO([FromForm] ImageDTO imageDTO)
         {
+            Generator generator = new Generator();
+            var result = generator.ImageTextMerge(imageDTO, 22, 22, 22, 22, 300,300);
+
             var meme = _mapper.Map<MemesImages>(imageDTO);
 
             _context.MemesImages.Add(meme);
 
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetImageDTO", new { id = imageDTO.Id }, imageDTO);
+            return File(result, "image/jpeg");
+
         }
 
         // DELETE: api/Memes/5
@@ -114,6 +127,19 @@ namespace APIGenerator.Controllers
         private bool ImageDTOExists(int id)
         {
             return _context.MemesImages.Any(e => e.Id == id);
+        }
+
+        [HttpPost("MergeImage")]
+        public async Task<IActionResult> MergeImage([FromForm] ImageDTO imageDTO)//(IFormFile files)
+        {
+            //long size = files.Sum(f => f.Length);
+
+            //var filePath = Path.GetTempFileName();
+
+            Generator generator = new Generator();
+            HttpResponseMessage file = generator.DownloadimageFile(imageDTO);      
+
+            return Ok(file.Content);
         }
     }
 }

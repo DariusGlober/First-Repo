@@ -1,23 +1,16 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using APIGenerator.Data;
 using APIGenerator.ActionFilters;
 using Microsoft.OpenApi.Models;
-using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using APIGenerator.Models;
 
 namespace APIGenerator
 {
@@ -53,12 +46,12 @@ namespace APIGenerator
                     {
                         options.TokenValidationParameters = new TokenValidationParameters
                         {
-                            ValidateIssuer = true,
+                            ValidateIssuer = false,
                             ValidateAudience = true,
                             ValidateLifetime = true,
                             ValidateIssuerSigningKey = true,
                             ValidIssuer = Configuration["Authentication:Issuer"],
-                            ValidAudience = Configuration["Authentication:Issuer"],
+                            ValidAudience = Configuration["Authentication:Audience"],
                             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Authentication:SecretKey"]))
                         };
                     }
@@ -78,10 +71,7 @@ namespace APIGenerator
 
             app.UseHttpsRedirection();
 
-            app.UseRouting();
-
-            app.UseAuthorization();
-            app.UseAuthentication();
+            app.UseRouting();               
 
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
@@ -91,6 +81,9 @@ namespace APIGenerator
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Foo API V1");
             });
+
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

@@ -37,7 +37,7 @@ namespace APIGenerator.Models
             {
                 entity.ToTable("Memes_Images");
 
-                entity.Property(e => e.Image).HasColumnType("image");
+                entity.Property(e => e.Image).IsUnicode(false);
 
                 entity.Property(e => e.ImageName)
                     .IsRequired()

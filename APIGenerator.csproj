@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <Compile Remove="Controllers\MemeController.cs" />
+    <Compile Remove="Controllers\MemessfController.cs" />
     <Compile Remove="Data\MyDBContext.cs" />
   </ItemGroup>
 

@@ -22,51 +22,6 @@ namespace APIGenerator.Services
             return View();
         }
 
-        //[System.Web.Http.HttpPost]
-        public HttpResponseMessage DownloadimageFile(ImageDTO imageDTO) //([System.Web.Http.FromBody] string imagename)
-        {
-            try
-            {
-                //string downloadPath = "C:\\Users\\dario.almeida\\Documents\\sun300.jpg";
-                //string downloadNewPath = "C:\\Users\\dario.almeida\\Documents\\sun3001.jpg";
-
-                //if (!System.IO.File.Exists(downloadPath))
-                //{
-                //    throw new HttpResponseException(HttpStatusCode.NotFound);
-                //}
-                Image image; // = Image.FromStream(imageDTO.Image);
-                //using (var ms = new MemoryStream(imageDTO.Image))
-                //{
-                //    image = Image.FromStream(ms);
-                //}
-
-
-                //FileStream fileStream = new FileStream(imageDTO.Image);
-
-                
-                MemoryStream memoryStream = new MemoryStream();
-
-                //image.Save(memoryStream, ImageFormat.Jpeg);
-
-                HttpResponseMessage response = new HttpResponseMessage();
-                response.StatusCode = HttpStatusCode.OK;
-                response.Content = new ByteArrayContent(memoryStream.ToArray());
-                //response.Content.Headers.ContentType = new MediaTypeHeaderValue("image/jpeg");
-                string contentDisposition = string.Concat("attachment; filename=", "test.jpg");
-                response.Content.Headers.ContentDisposition =
-                              ContentDispositionHeaderValue.Parse(contentDisposition);
-                response.Content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/octet-stream");
-
-                return response;
-            }
-            catch(Exception ex)
-            {
-                HttpResponseMessage response = new HttpResponseMessage();
-                response.StatusCode = HttpStatusCode.InternalServerError;
-                return response;
-            }
-        }
-
         public byte[] ImageTextMerge(ImageDTO imageDTO, Int32 x, Int32 y, Int32 w, Int32 h, Int32 width = 200, Int32 height = 200)
         {
             var file = imageDTO.ImageFile;

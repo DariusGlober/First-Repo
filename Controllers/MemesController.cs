@@ -44,17 +44,14 @@ namespace APIGenerator.Controllers
         public async Task<ActionResult<byte[]>> GetImageDTO(int id)
         {
             var imageDTO = await _context.MemesImages.FindAsync(id);
-            var ImageDTO = new ImageDTO();
-
-            Generator generator = new Generator();
-            HttpResponseMessage file = generator.DownloadimageFile(ImageDTO);
+            var ImageDTO = new ImageDTO();          
 
             if (imageDTO == null)
             {
                 return NotFound();
             }
 
-            return Ok(file.Content);
+            return Ok(ImageDTO);
         }
 
         // PUT: api/Memes/5
@@ -129,17 +126,5 @@ namespace APIGenerator.Controllers
             return _context.MemesImages.Any(e => e.Id == id);
         }
 
-        [HttpPost("MergeImage")]
-        public async Task<IActionResult> MergeImage([FromForm] ImageDTO imageDTO)//(IFormFile files)
-        {
-            //long size = files.Sum(f => f.Length);
-
-            //var filePath = Path.GetTempFileName();
-
-            Generator generator = new Generator();
-            HttpResponseMessage file = generator.DownloadimageFile(imageDTO);      
-
-            return Ok(file.Content);
-        }
     }
 }
